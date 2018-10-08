@@ -195,14 +195,14 @@ describe 'nisclient' do
       }
     end
 
-    context 'with defaults params on Ubuntu' do
+    context 'with defaults params on Ubuntu 18.04' do
       let :facts do
         {
           :domain                 => 'example.com',
           :kernel                 => 'Linux',
           :lsbdistid              => 'Ubuntu',
           :osfamily               => 'Debian',
-          :operatingsystemrelease => '14.04',
+          :operatingsystemrelease => '18.04',
         }
       end
 
@@ -252,10 +252,30 @@ describe 'nisclient' do
       it {
         should contain_service('nis_service').with({
           'ensure' => 'running',
-          'name'   => 'ypbind',
+          'name'   => 'nis',
           'enable' => 'true',
         })
       }
+
+      context 'with version 14.04' do
+        let :facts do
+          {
+            :domain                 => 'example.com',
+            :kernel                 => 'Linux',
+            :lsbdistid              => 'Ubuntu',
+            :osfamily               => 'Debian',
+            :operatingsystemrelease => '14.04',
+          }
+        end
+
+        it {
+          should contain_service('nis_service').with({
+            'ensure' => 'running',
+            'name'   => 'ypbind',
+            'enable' => 'true',
+          })
+        }
+      end
 
       context 'with version 16.04' do
         let :facts do
